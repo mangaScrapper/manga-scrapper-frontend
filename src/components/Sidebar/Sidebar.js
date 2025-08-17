@@ -48,7 +48,6 @@ export default function Sidebar({ isOpen, onClose }) {
                       ? "bg-gray-200 dark:bg-gray-700 text-blue-600 dark:text-blue-400"
                       : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                   }`}
-                  onClick={onClose}
                 >
                   {link.icon}
                   <span className="ml-3">{link.label}</span>

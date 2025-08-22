@@ -18,15 +18,9 @@ export default function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
   return (
     <>
-      {/* Overlay for all screens */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-30"
-          onClick={onClose}
-        />
-      )}
+      {/* Overlay for all screens - removed to prevent closing on background click */}
       <aside
-        className={`fixed top-0 left-0 z-40 w-64 h-full transition-transform bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed top-0 left-0 z-40 w-64 h-full transition-transform bg-gray-50 dark:bg-gray-800 transform ${isOpen ? 'translate-x-0 border-r border-gray-200 dark:border-gray-700' : '-translate-x-full'}`}
         aria-label="Sidebar"
       >
         {/* Close button for all screens */}

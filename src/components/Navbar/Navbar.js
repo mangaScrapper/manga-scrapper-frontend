@@ -1,6 +1,8 @@
 import React from "react";
 
-export default function Navbar({ onSidebarToggle, onThemeToggle, theme }) {
+function Navbar({ onSidebarToggle, onThemeToggle, theme }) {
+
+
   return (
     <nav className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 h-16 sm:h-16 w-full">
       <div className="flex items-center w-full sm:w-auto">
@@ -33,3 +35,5 @@ export default function Navbar({ onSidebarToggle, onThemeToggle, theme }) {
     </nav>
   );
 } 
+
+export default Navbar;

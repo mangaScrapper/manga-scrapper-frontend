@@ -1,76 +1,222 @@
 'use client';
 
-import { FaDatabase, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { useState, useEffect } from 'react';
+import { FaDatabase, FaCheckCircle, FaTimesCircle, FaGlobe, FaClock, FaChevronLeft, FaChevronRight, FaSpinner } from "react-icons/fa";
+import { withAuth } from "@/components/withAuth";
+import { apiClient } from "@/services/api";
 
-export default function Sources() {
-  const sources = [
-    { name: 'MangaDex', type: 'Aggregator', status: 'Active', lastUpdated: '2024-06-01' },
-    { name: 'MangaHere', type: 'Direct', status: 'Active', lastUpdated: '2024-05-30' },
-    { name: 'MangaFox', type: 'Aggregator', status: 'Inactive', lastUpdated: '2024-05-20' },
-  ];
-  const total = sources.length;
-  const active = sources.filter(s => s.status === 'Active').length;
-  const inactive = sources.filter(s => s.status !== 'Active').length;
+function Sources() {
+  const [sources, setSources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [error, setError] = useState(null);
+  const pageSize = 20;
 
-  return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Sources</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-          <FaDatabase className="w-6 h-6 text-blue-500 mr-3" />
-          <div>
-            <div className="text-gray-500 text-sm">Total Sources</div>
-            <div className="text-xl font-bold">{total}</div>
-          </div>
+  const fetchSources = async (page = 1) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const result = await apiClient.get('/api/sources', { 
+        params: { 
+          page: page.toString(), 
+          limit: pageSize.toString() 
+        } 
+      });
+      console.log('result', result);
+      if (result.success) {
+        setSources(result.data || []);
+        setTotal(result.data.length || 0);
+        setTotalPages(Math.ceil((result.data.length || 0) / pageSize));
+        setCurrentPage(page);
+      } else {
+        setError(result.error || 'API request failed');
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching sources:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSources(1);
+  }, []);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      fetchSources(page);
+    }
+  };
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return (
+      <div className="flex items-center justify-between mt-4">
+        <div className="text-sm text-gray-700 dark:text-gray-300">
+          Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, total)} of {total} results
         </div>
-        <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-          <FaCheckCircle className="w-6 h-6 text-green-500 mr-3" />
-          <div>
-            <div className="text-gray-500 text-sm">Active</div>
-            <div className="text-xl font-bold">{active}</div>
-          </div>
-        </div>
-        <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-          <FaTimesCircle className="w-6 h-6 text-red-500 mr-3" />
-          <div>
-            <div className="text-gray-500 text-sm">Inactive</div>
-            <div className="text-xl font-bold">{inactive}</div>
-          </div>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="p-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <FaChevronLeft className="w-4 h-4" />
+          </button>
+          
+          {pages.map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                page === currentPage
+                  ? 'bg-blue-500 text-white'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600'
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+          
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="p-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <FaChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
-      <p className="mb-4 text-gray-600 dark:text-gray-300">Manage and monitor all manga sources your bot scrapes from.</p>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-        <table className="w-full text-sm text-left">
-          <thead>
-            <tr className="text-gray-500 dark:text-gray-400">
-              <th className="py-2">Name</th>
-              <th className="py-2">Type</th>
-              <th className="py-2">Status</th>
-              <th className="py-2">Last Updated</th>
-              <th className="py-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sources.map((src, idx) => (
-              <tr key={idx} className="border-t border-gray-200 dark:border-gray-700">
-                <td className="py-2">{src.name}</td>
-                <td className="py-2">{src.type}</td>
-                <td className="py-2">
-                  {src.status === 'Active' ? (
-                    <span className="flex items-center text-green-600"><FaCheckCircle className="mr-1" />Active</span>
-                  ) : (
-                    <span className="flex items-center text-red-600"><FaTimesCircle className="mr-1" />Inactive</span>
-                  )}
-                </td>
-                <td className="py-2">{src.lastUpdated}</td>
-                <td className="py-2">
-                  <button className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs">Test</button>
-                </td>
+    );
+  };
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Sources</h1>
+        <div className="bg-red-100 dark:bg-red-900 border border-red-400 text-red-700 dark:text-red-300 px-4 py-3 rounded">
+          Error: {error}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Sources</h1>
+      
+      <p className="mb-6 text-gray-600 dark:text-gray-300">
+        Manage and monitor all manga sources your bot scrapes from.
+      </p>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th className="px-6 py-3 font-medium">Name</th>
+                <th className="px-6 py-3 font-medium">Domain</th>
+                <th className="px-6 py-3 font-medium">Status</th>
+                <th className="px-6 py-3 font-medium">Scan Interval</th>
+                <th className="px-6 py-3 font-medium">Created</th>
+                <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center">
+                    <div className="flex items-center justify-center">
+                      <FaSpinner className="animate-spin w-6 h-6 text-blue-500 mr-2" />
+                      <span className="text-gray-500 dark:text-gray-400">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : sources.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                    No sources found
+                  </td>
+                </tr>
+              ) : (
+                sources.map((source, index) => (
+                  <tr key={source.id || index} className="border-t border-gray-200 dark:border-gray-700">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        <FaDatabase className="w-4 h-4 text-blue-500 mr-2" />
+                        <span className="font-medium text-gray-900 dark:text-white">{source.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        <FaGlobe className="w-4 h-4 text-gray-400 mr-2" />
+                        <span className="text-gray-600 dark:text-gray-300">{source.domain}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        source.isActive 
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
+                          : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                      }`}>
+                        {source.isActive ? (
+                          <>
+                            <FaCheckCircle className="w-3 h-3 mr-1" />
+                            Active
+                          </>
+                        ) : (
+                          <>
+                            <FaTimesCircle className="w-3 h-3 mr-1" />
+                            Inactive
+                          </>
+                        )}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                        <FaClock className="w-4 h-4 mr-1" />
+                        {source.scanInterval}s
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {new Date(source.createdAt).toLocaleDateString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <button className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs transition-colors">
+                        Test
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        
+        {renderPagination()}
       </div>
     </div>
   );
-} 
+}
+
+export default withAuth(Sources); 

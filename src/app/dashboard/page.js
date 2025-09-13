@@ -1,5 +1,6 @@
 'use client';
 
+import { withAuth } from "@/components/withAuth";
 import { FaUser, FaBook, FaRobot, FaServer, FaCheckCircle, FaTimesCircle, FaGlobe, FaExclamationTriangle } from "react-icons/fa";
 
 const summaryCards = [
@@ -37,7 +38,7 @@ const errorAndWarning = [
     { text: 'Proxy Error', time: '2024-06-01 12:00', type: 'error' },
 ]
 
-export default function Dashboard() {
+function Dashboard() {
     return (
         <div className="p-6">
             <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
@@ -173,3 +174,5 @@ export default function Dashboard() {
         </div>
     );
 }
+
+export default withAuth(Dashboard);

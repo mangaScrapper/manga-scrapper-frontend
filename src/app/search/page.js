@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { FaSearch, FaChevronLeft, FaChevronRight, FaSpinner, FaBook, FaImage, FaTag } from "react-icons/fa";
 import { withAuth } from "@/components/withAuth";
 import { apiClient } from "@/services/api";
+import Image from 'next/image'
 
 function Search() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -145,10 +146,12 @@ function Search() {
       <div className="flex space-x-4">
         {manga.coverUrl && (
           <div className="flex-shrink-0">
-            <img
+            <Image
               src={manga.coverUrl}
               alt={manga.title}
               className="w-20 h-28 object-cover rounded"
+              width={80}
+              height={28}
               onError={(e) => {
                 e.target.style.display = 'none';
               }}

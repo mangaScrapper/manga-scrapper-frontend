@@ -47,7 +47,7 @@ function Logs() {
 
   useEffect(() => {
     fetchLogs(1, filters);
-  }, []);
+  }, [filters]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {

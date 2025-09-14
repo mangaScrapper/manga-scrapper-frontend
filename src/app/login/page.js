@@ -12,11 +12,11 @@ function Login() {
   const { user, login } = useAuth();
   const router = useRouter();
 
-//   useEffect(() => {
-//     if (user) {
-//         router.push('/dashboard');
-//     }
-//   }, [])
+  useEffect(() => {
+    if (user) {
+        router.push('/dashboard');
+    }
+  }, [user, router])
 
   const handleSubmit = async (e) => {
     e.preventDefault();

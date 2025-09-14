@@ -17,14 +17,22 @@ function LayoutContent({ children }) {
   const handleSidebarToggle = () => setSidebarOpen((open) => !open);
   const handleSidebarClose = () => setSidebarOpen(false);
 
-  if (!ready) return null;
-
   // Login sayfasında navbar ve sidebar gösterme
   const isLoginPage = pathname === '/login';
+  const token = localStorage.getItem('token');
+
+  // Sidebar context henüz hazır değilse loading göster
+  if (!ready) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
-      {!isLoginPage && user && (
+      {!isLoginPage && user && token && (
         <>
           <Navbar onSidebarToggle={handleSidebarToggle} onThemeToggle={toggleTheme} theme={theme} />
           <div className="flex flex-1 min-h-0">

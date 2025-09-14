@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaTachometerAlt, FaDatabase, FaHdd, FaBookOpen, FaUser, FaClipboardList, FaCog, FaExternalLinkAlt, FaSearch, FaClock } from "react-icons/fa";
+import { withAuth } from "../withAuth";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: <FaTachometerAlt className="w-5 h-5" /> },
@@ -58,4 +59,4 @@ function Sidebar({ isOpen, onClose }) {
   );
 } 
 
-export default Sidebar;
+export default withAuth(Sidebar);

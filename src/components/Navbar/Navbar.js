@@ -1,5 +1,6 @@
 import React from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { withAuth } from "../withAuth";
 
 function Navbar({ onSidebarToggle, onThemeToggle, theme }) {
 
@@ -40,4 +41,4 @@ function Navbar({ onSidebarToggle, onThemeToggle, theme }) {
   );
 } 
 
-export default Navbar;
+export default withAuth(Navbar);

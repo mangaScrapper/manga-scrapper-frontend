@@ -5,15 +5,13 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const SidebarContext = createContext();
 
 export function SidebarProvider({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(undefined);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // default değer
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("sidebarOpen");
     if (stored !== null) {
       setSidebarOpen(stored === "true");
-    } else {
-      setSidebarOpen(true); // default
     }
     setReady(true);
   }, []);
@@ -23,8 +21,6 @@ export function SidebarProvider({ children }) {
       localStorage.setItem("sidebarOpen", sidebarOpen);
     }
   }, [sidebarOpen, ready]);
-
-  if (!ready) return null;
 
   return (
     <SidebarContext.Provider value={{ sidebarOpen, setSidebarOpen, ready }}>

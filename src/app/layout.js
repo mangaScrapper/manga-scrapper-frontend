@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "../components/ClientLayout";
 import { SidebarProvider } from "../components/SidebarContext";
+import { AuthProvider } from "../contexts/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,9 +25,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black dark:bg-gray-900 dark:text-white`}
       >
-        <SidebarProvider>
-          <ClientLayout>{children}</ClientLayout>
-        </SidebarProvider>
+        <AuthProvider>
+          <SidebarProvider>
+            <ClientLayout>{children}</ClientLayout>
+          </SidebarProvider>
+        </AuthProvider>
       </body>
     </html>
   );

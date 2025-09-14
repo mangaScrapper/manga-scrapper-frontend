@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+'use client';
+
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
@@ -19,9 +21,12 @@ authApi.interceptors.request.use((config) => {
   return config;
 });
 
-export function useAuth() {
+const AuthContext = createContext();
+
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [hasToken, setHasToken] = useState(false);
   const router = useRouter();
 
   // Sayfa yüklendiğinde token kontrolü yap
@@ -29,6 +34,7 @@ export function useAuth() {
     const checkAuth = async () => {
       if (typeof window !== 'undefined') {
         const token = localStorage.getItem('token');
+        setHasToken(!!token);
         if (token) {
           try {
             // Token varsa kullanıcı bilgilerini al
@@ -37,6 +43,7 @@ export function useAuth() {
           } catch (error) {
             // Token geçersizse temizle
             localStorage.removeItem('token');
+            setHasToken(false);
           }
         }
         setLoading(false);
@@ -52,6 +59,7 @@ export function useAuth() {
       console.log('Login response:', response);
       if (typeof window !== 'undefined') {
         localStorage.setItem('token', response.data.data.token);
+        setHasToken(true);
       }
       console.log('Login response user:', response.data.data.user);
       setUser(response.data.data.user);
@@ -71,14 +79,32 @@ export function useAuth() {
       localStorage.removeItem('token');
     }
     setUser(null);
+    setHasToken(false);
     router.push('/login');
   };
 
-  return {
+  const isAuthenticated = !!user || hasToken;
+
+
+  const value = {
     user,
     loading,
     login,
     logout,
-    isAuthenticated: !!user,
+    isAuthenticated,
   };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }

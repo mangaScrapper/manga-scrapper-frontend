@@ -5,13 +5,13 @@ import Sidebar from "./Sidebar/Sidebar";
 import MainContent from "./MainContent";
 import useTheme from "../hooks/useTheme";
 import { useSidebar } from "./SidebarContext";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../contexts/AuthContext";
 import { usePathname } from "next/navigation";
 
 function LayoutContent({ children }) {
   const { sidebarOpen, setSidebarOpen, ready } = useSidebar();
   const { theme, toggleTheme } = useTheme();
-  const { user, loading } = useAuth();
+  const { user, loading, isAuthenticated } = useAuth();
   const pathname = usePathname();
 
   const handleSidebarToggle = () => setSidebarOpen((open) => !open);
@@ -19,7 +19,6 @@ function LayoutContent({ children }) {
 
   // Login sayfasında navbar ve sidebar gösterme
   const isLoginPage = pathname === '/login';
-  const token = localStorage.getItem('token');
 
   // Sidebar context henüz hazır değilse loading göster
   if (!ready) {
@@ -32,7 +31,7 @@ function LayoutContent({ children }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
-      {!isLoginPage && user && token && (
+      {!isLoginPage && isAuthenticated && (
         <>
           <Navbar onSidebarToggle={handleSidebarToggle} onThemeToggle={toggleTheme} theme={theme} />
           <div className="flex flex-1 min-h-0">

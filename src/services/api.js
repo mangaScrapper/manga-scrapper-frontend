@@ -6,7 +6,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://162.55.58.227:3
 // Axios instance oluşturma
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -127,40 +126,6 @@ export const apiClient = {
       };
     }
   },
-};
-
-export const useApi = () => {
-  const user = {
-    getProfile: () => apiClient.get('/api/user/profile'),
-    updateProfile: (data) => apiClient.put('/api/user/profile', data),
-    deleteAccount: () => apiClient.delete('/api/user/account'),
-  };
-
-  // Ürün işlemleri
-  const products = {
-    getAll: () => apiClient.get('/api/products'),
-    getById: (id) => apiClient.get(`/api/products/${id}`),
-    create: (data) => apiClient.post('/api/products', data),
-    update: (id, data) => apiClient.put(`/api/products/${id}`, data),
-    delete: (id) => apiClient.delete(`/api/products/${id}`),
-  };
-
-  // Sipariş işlemleri
-  const orders = {
-    getAll: () => apiClient.get('/api/orders'),
-    getById: (id) => apiClient.get(`/api/orders/${id}`),
-    create: (data) => apiClient.post('/api/orders', data),
-    update: (id, data) => apiClient.put(`/api/orders/${id}`, data),
-    cancel: (id) => apiClient.delete(`/api/orders/${id}`),
-  };
-
-  return {
-    user,
-    products,
-    orders,
-    // Doğrudan apiClient'a da erişim sağlar
-    raw: apiClient,
-  };
 };
 
 export default apiClient;

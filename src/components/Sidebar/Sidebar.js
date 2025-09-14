@@ -1,12 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaTachometerAlt, FaDatabase, FaBullseye, FaHdd, FaBookOpen, FaUser, FaClipboardList, FaCog, FaExternalLinkAlt, FaSearch } from "react-icons/fa";
+import { FaTachometerAlt, FaDatabase, FaHdd, FaBookOpen, FaUser, FaClipboardList, FaCog, FaExternalLinkAlt, FaSearch, FaClock } from "react-icons/fa";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: <FaTachometerAlt className="w-5 h-5" /> },
   { href: "/sources", label: "Sources", icon: <FaDatabase className="w-5 h-5" /> },
-  { href: "/targets", label: "Targets", icon: <FaBullseye className="w-5 h-5" /> },
+  { href: "/scheduler", label: "Scheduler", icon: <FaClock className="w-5 h-5" /> },
   { href: "/storage", label: "Storage", icon: <FaHdd className="w-5 h-5" /> },
   { href: "/content", label: "Content", icon: <FaBookOpen className="w-5 h-5" /> },
   { href: "/external-apis", label: "External APIs", icon: <FaExternalLinkAlt className="w-5 h-5" /> },

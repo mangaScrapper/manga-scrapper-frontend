@@ -1,6 +1,9 @@
 import React from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 function Navbar({ onSidebarToggle, onThemeToggle, theme }) {
+
+  const { logout } = useAuth();
 
 
   return (
@@ -31,6 +34,7 @@ function Navbar({ onSidebarToggle, onThemeToggle, theme }) {
             )}
           </button>
         ) : null}
+        <button className="btn btn-primary" onClick={() => logout()}>Logout</button>
       </div>
     </nav>
   );

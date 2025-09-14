@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { apiClient } from "@/services/api";
+import { withAuth } from '@/components/withAuth';
 
-export default function SchedulerDashboard() {
+function SchedulerDashboard() {
   const [schedulerStatus, setSchedulerStatus] = useState(null);
   const [mangaCheckStatus, setMangaCheckStatus] = useState(null);
   const [intervalMinutes, setIntervalMinutes] = useState(30);
@@ -219,3 +220,5 @@ export default function SchedulerDashboard() {
     </div>
   );
 }
+
+export default withAuth(SchedulerDashboard);

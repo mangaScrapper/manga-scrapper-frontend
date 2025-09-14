@@ -262,7 +262,7 @@ function Search() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">
-                Search Results for "{searchData.searchTerm}"
+                {`Search Results for "${searchData.searchTerm}"`}
               </h3>
               <p className="text-blue-700 dark:text-blue-300">
                 Found {searchData.totalResults} results from {searchData.totalApis} APIs

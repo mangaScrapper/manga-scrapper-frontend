@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaInfoCircle, FaExclamationTriangle, FaTimesCircle, FaFilter, FaChevronLeft, FaChevronRight, FaSpinner } from "react-icons/fa";
+import { FaInfoCircle, FaExclamationTriangle, FaTimesCircle, FaFilter, FaChevronLeft, FaChevronRight, FaSpinner, FaExclamation } from "react-icons/fa";
 import { withAuth } from "@/components/withAuth";
 import { apiClient } from "@/services/api";
 import moment from 'moment';
@@ -67,22 +67,29 @@ function Logs() {
       case 'INFO':
         return (
           <span className={`${baseClasses} bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300`}>
-            <FaInfoCircle className="w-3 h-3 mr-1" />
+            <FaInfoCircle className="w-4 h-3 mr-1" />
             Info
           </span>
         );
       case 'WARN':
         return (
           <span className={`${baseClasses} bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300`}>
-            <FaExclamationTriangle className="w-3 h-3 mr-1" />
+            <FaExclamationTriangle className="w-4 h-3 mr-1" />
             Warn
           </span>
         );
       case 'ERROR':
         return (
           <span className={`${baseClasses} bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300`}>
-            <FaTimesCircle className="w-3 h-3 mr-1" />
+            <FaTimesCircle className="w-4 h-3 mr-1" />
             Error
+          </span>
+        );
+      case 'DEBUG':
+        return (
+          <span className={`${baseClasses} bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300`}>
+            <FaExclamation className="w-4 h-3 mr-1" />
+            Debug
           </span>
         );
       default:

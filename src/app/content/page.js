@@ -41,20 +41,6 @@ export default function Content() {
           </div>
         </div>
       </div>
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-2">Popular Manga</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {popular.map((manga, idx) => (
-            <div key={idx} className="bg-white dark:bg-gray-800 rounded-lg shadow p-3 flex flex-col items-center">
-              <div className="w-16 h-20 bg-gray-200 dark:bg-gray-700 rounded mb-2 flex items-center justify-center text-2xl font-bold text-gray-400">
-                {manga.title[0]}
-              </div>
-              <div className="font-semibold text-gray-900 dark:text-white text-sm mb-1">{manga.title}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{manga.chapters} chapters</div>
-            </div>
-          ))}
-        </div>
-      </div>
       <p className="mb-4 text-gray-600 dark:text-gray-300">View and manage all manga content scraped by your bot.</p>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
         <table className="w-full text-sm text-left">

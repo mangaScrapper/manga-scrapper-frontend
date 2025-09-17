@@ -6,13 +6,11 @@ import { withAuth } from "../withAuth";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: <FaTachometerAlt className="w-5 h-5" /> },
-  { href: "/sources", label: "Sources", icon: <FaDatabase className="w-5 h-5" /> },
   { href: "/scheduler", label: "Scheduler", icon: <FaClock className="w-5 h-5" /> },
   { href: "/storage", label: "Storage", icon: <FaHdd className="w-5 h-5" /> },
   { href: "/content", label: "Content", icon: <FaBookOpen className="w-5 h-5" /> },
-  { href: "/external-apis", label: "External APIs", icon: <FaExternalLinkAlt className="w-5 h-5" /> },
+  { href: "/sources", label: "Sources", icon: <FaDatabase className="w-5 h-5" /> },
   { href: "/search", label: "Search", icon: <FaSearch className="w-5 h-5" /> },
-  { href: "/users", label: "Users", icon: <FaUser className="w-5 h-5" /> },
   { href: "/logs", label: "Logs", icon: <FaClipboardList className="w-5 h-5" /> },
   { href: "/settings", label: "Settings", icon: <FaCog className="w-5 h-5" /> },
 ];
